@@ -51,4 +51,22 @@ export class UserService {
       throw new BadRequestException(err);
     }
   }
+
+  async getMe(user_id: number): Promise<Omit<User, 'password' | 'role'>> {
+    return this.prismaService.user.findUnique({
+      where: {
+        id: user_id,
+      },
+      select: {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        created_at: true,
+        updated_at: true,
+        avatar_url: true,
+        phone_number: true,
+      },
+    });
+  }
 }
