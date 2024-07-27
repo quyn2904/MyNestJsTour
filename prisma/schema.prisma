@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  first_name  String?
+  last_name   String?
+  phone_number String?
+  avatar_url  String?
+  role        USER_ROLE @default(USER)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  notes       Note[]
+  refresh_tokens RefreshToken[]
+
+  @@map("users")
+}
+
+enum USER_ROLE {
+  ADMIN
+  USER
+}
+
+model Note {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  url         String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+
+  @@map("notes")
+}
+
+model RefreshToken {
+  token      String   @id
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  created_at DateTime @default(now())
+  iat        DateTime
+  exp        DateTime
+
+  @@map("refresh_tokens")
+}

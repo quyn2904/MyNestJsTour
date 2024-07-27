@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  dev-database:
+    image: postgres:15.0
+    container_name: dev-database
+    ports:
+      - '5432:5432' #{port in host : port in container}
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dev_db
+    networks:
+      - nestjs-network
+networks:
+  nestjs-network:
+    # driver: bridge
+# create container, network, .. from "docker-compose.yaml"
+# -d: run in background
+# docker compose up -d
